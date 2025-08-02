@@ -18,6 +18,8 @@ local str_buf       = get_string_buf(1024)
 ffi.cdef([[
 int ngx_http_lua_var_ffi_uri(ngx_http_request_t *r, ngx_str_t *uri);
 int ngx_http_lua_var_ffi_host(ngx_http_request_t *r, ngx_str_t *host);
+int ngx_http_lua_var_ffi_server_name(ngx_http_request_t *r,
+    ngx_str_t *server_name);
 int ngx_http_lua_var_ffi_remote_addr(ngx_http_request_t *r,
     ngx_str_t *remote_addr);
 int ngx_http_lua_var_ffi_request_time(ngx_http_request_t *r,
@@ -52,6 +54,17 @@ function vars.host(r)
     end
 
     C.ngx_http_lua_var_ffi_host(r, str_t)
+    return (ffi_string(str_t[0].data, str_t[0].len))
+end
+
+
+function vars.server_name(r)
+    r = r or get_request()
+    if not r then
+        return nil, "no request found"
+    end
+
+    C.ngx_http_lua_var_ffi_server_name(r, str_t)
     return (ffi_string(str_t[0].data, str_t[0].len))
 end
 

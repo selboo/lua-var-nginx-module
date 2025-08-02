@@ -66,6 +66,20 @@ ngx_http_lua_var_ffi_host(ngx_http_request_t *r, ngx_str_t *host)
 
 
 ngx_int_t
+ngx_http_lua_var_ffi_server_name(ngx_http_request_t *r, ngx_str_t *server_name)
+{
+    ngx_http_core_srv_conf_t *cscf;
+
+    cscf = ngx_http_get_module_srv_conf(r, ngx_http_core_module);
+
+    server_name->len = cscf->server_name.len;
+    server_name->data = cscf->server_name.data;
+
+    return NGX_OK;
+}
+
+
+ngx_int_t
 ngx_http_lua_var_ffi_remote_addr(ngx_http_request_t *r, ngx_str_t *remote_addr)
 {
     remote_addr->len = r->connection->addr_text.len;
